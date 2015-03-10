@@ -18,7 +18,6 @@ import android.widget.ListView;
 public class EventList extends ListActivity {
 
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -16,14 +16,14 @@ public class WelcomeScreen extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcome_screen);
 
-		final Button skip = (Button) findViewById(R.id.skip);
+		/*final Button skip = (Button) findViewById(R.id.skip);
 		skip.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeScreen.this, EventList.class);
 				startActivity(intent);
 			}
-		});
+		});*/
 	}
 
 
