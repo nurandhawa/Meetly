@@ -1,9 +1,12 @@
 package com.example.churro.meetly;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class WelcomeScreen extends ActionBarActivity {
@@ -12,6 +15,15 @@ public class WelcomeScreen extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcome_screen);
+
+		final Button skip = (Button) findViewById(R.id.skip);
+		skip.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(WelcomeScreen.this, EventList.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 
