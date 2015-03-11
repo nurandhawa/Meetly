@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">Meetly</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="team_name">team Churro</string>
+    <string name="skip">skip</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_event_list">EventList</string>
     <string name="title_activity_event_viewer">EventViewer</string>
