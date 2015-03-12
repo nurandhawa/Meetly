@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Meetly.iml" filepath="$PROJECT_DIR$/Meetly.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/churro-meetly.iml" filepath="$PROJECT_DIR$/churro-meetly.iml" />
     </modules>
   </component>
 </project>

@@ -1,22 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				xmlns:tools="http://schemas.android.com/tools"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:paddingLeft="@dimen/activity_horizontal_margin"
-				android:paddingRight="@dimen/activity_horizontal_margin"
-				android:paddingTop="@dimen/activity_vertical_margin"
-				android:paddingBottom="@dimen/activity_vertical_margin"
-				tools:context=".WelcomeScreen">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".WelcomeScreen">
 
-	<TextView
-		android:text="@string/hello_world"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
 
-	<Button
-		android:id="@+id/skip"
-		android:text="@string/hello_world"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:text="@string/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_appName"
+        android:gravity="center"
+        android:textSize="40sp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:textStyle="bold"
+        android:textColor="@color/blue"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"/>
+
+
+    <Button
+        android:id="@+id/btn_skip"
+        android:text="@string/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/txt_appName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/team_name"
+        android:id="@+id/txt_teamName"
+        android:textColor="@android:color/black"
+        android:textStyle="italic"
+        android:textSize="14sp"
+        android:layout_above="@+id/txt_appName"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
