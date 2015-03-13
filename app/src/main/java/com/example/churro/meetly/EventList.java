@@ -22,6 +22,11 @@ import java.util.List;
 
 public class EventList extends ActionBarActivity {
 
+    final long secondsInMilli = 1000;
+    final long minutesInMilli = secondsInMilli * 60;
+    final long hoursInMilli = minutesInMilli * 60;
+    final long daysInMilli = hoursInMilli * 24;
+
     public List<Event> myEvents = new ArrayList<Event>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,6 @@ public class EventList extends ActionBarActivity {
         makeItemsClickable();
 
         createEventButton();
-        calculateDuration();
 
     }
 
@@ -53,8 +57,8 @@ public class EventList extends ActionBarActivity {
 
     //TODO:: get list from other activity
     private void populateList() {
-        Date startDate1 = new Date(115,3,10,5,30);
-        Date endDate1 = new Date (115,3,12,6,30);
+        Date startDate1 = new Date(115,5,12,6,06); //year, month indexed0, day, hour, minute
+        Date endDate1 = new Date (115,6,12,6,30);
         myEvents.add(new Event("Basketball Game" , startDate1, endDate1 ));
         Date startDate2 = new Date(115,2, 10, 5, 30);
         Date endDate2 = new Date(115,2, 12, 5, 30);
@@ -87,11 +91,9 @@ public class EventList extends ActionBarActivity {
 
 
 
-    private long calculateDuration() {
+    private long calculateDuration(Event e) {
         long difference = 0;
-        for (Event e : myEvents) {
-            difference = e.getEnd().getTime() - e.getStart().getTime();
-        }
+        difference = e.getEnd().getTime() - e.getStart().getTime();
         return difference;
     }
 
@@ -115,11 +117,66 @@ public class EventList extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Event eventClicked = myEvents.get(position);
                 //TODO: open new activity once clicked
-                String message = "You clicked # " + position +
-                        " Event Name: " + eventClicked.getTitle();
+                //TextView name = (TextView) findViewById(R.id.eventName);
+                //name.setText(eventClicked.getTitle());
+                String name = (eventClicked.getTitle());
+
+//                TextView start = (TextView) findViewById(R.id.startTime);
+                String start = (eventClicked.getStart().toString());
+
+//                TextView end = (TextView) findViewById(R.id.endTime);
+                String end = (eventClicked.getEnd().toString());
+
+//                TextView timeRemaining = (TextView) findViewById(R.id.timeLeft);
+                Date now = new Date();
+
+                String difference = findTimeRemaining(eventClicked , now);
+                //EventViewer.textViewTime.setText(difference);
+
+                Bundle b = new Bundle();
+                b.putString("NAME", name);
+                b.putString("START" , start);
+                b.putString("END" , end);
+                b.putString("TIME", difference);
+
+                Intent intent = new Intent (EventList.this, EventViewer.class);
+                intent.putExtras(b);
+
+                startActivity(intent);
+
+                String message = eventClicked.getTitle();
                 Toast.makeText(EventList.this, message, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private String findTimeRemaining(Event eventClicked, Date now) {
+        long start = eventClicked.getStart().getTime();
+        long nowTime = now.getTime();
+        long difference = start - nowTime;
+
+        if (difference >= 0) {
+
+            long daysPassed = difference / daysInMilli;
+            difference = difference % daysInMilli;
+
+            long hoursPassed = difference / hoursInMilli;
+            difference = difference % hoursInMilli;
+
+            long minutesPassed = difference / minutesInMilli;
+            difference = difference % minutesInMilli;
+
+            long secondsPassed = difference / secondsInMilli;
+
+            String timeRemaining = daysPassed + " days, " +
+                    hoursPassed + " hours, " +
+                    minutesPassed + " minutes, " +
+                    secondsPassed + " seconds";
+
+            return timeRemaining;
+        } else {
+            return "Happening now!";
+        }
     }
 
     private class MyListAdapter extends ArrayAdapter<Event> {
@@ -135,7 +192,7 @@ public class EventList extends ActionBarActivity {
                 itemView = getLayoutInflater().inflate(R.layout.item_list, parent, false);
             }
 
-            // Find the car to work with.
+            // Find the event to work with.
             Event e = myEvents.get(position);
 
             // name:
@@ -149,11 +206,9 @@ public class EventList extends ActionBarActivity {
             // end:
             TextView duration = (TextView) itemView.findViewById(R.id.item_txtEnd);
 //            endText.setText("" + e.getEnd());
-            long difference = calculateDuration();
-            long secondsInMilli = 1000;
-            long minutesInMilli = secondsInMilli * 60;
-            long hoursInMilli = minutesInMilli * 60;
-            long daysInMilli = hoursInMilli * 24;
+
+            long difference = calculateDuration(e);
+
 
             long daysPassed = difference / daysInMilli;
             difference = difference % daysInMilli;

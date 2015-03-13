@@ -29,17 +29,30 @@ public class WelcomeScreen extends ActionBarActivity {
 
         final TextView name = (TextView) findViewById(R.id.txt_appName);
 
-        //App name with two different colors
-        Spannable colorChange =  new SpannableString(name.getText());
-        colorChange.setSpan(new ForegroundColorSpan(Color.RED), 2, "Mee".length(),
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-
-        name.setText(colorChange);
-
-
-
         Animation fade = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         name.startAnimation(fade);
+
+        fade.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //App name with two different colors
+                Spannable colorChange =  new SpannableString(name.getText());
+                colorChange.setSpan(new ForegroundColorSpan(Color.RED), 2, "Mee".length(),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+
+                name.setText(colorChange);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
         //rotate only along x-axis
         final ValueAnimator rotate = ValueAnimator.ofFloat(0, 1);

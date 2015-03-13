@@ -4,36 +4,35 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class EventViewer extends ActionBarActivity {
-
+    public static TextView textViewName;
+    public static TextView textViewStart;
+    public static TextView textViewEnd;
+    public static TextView textViewTime;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.event_viewer_screen);
+        String name = getIntent().getExtras().getString("NAME");
+        textViewName = (TextView) findViewById(R.id.eventName);
+        textViewName.setText(name);
+
+        String start = getIntent().getExtras().getString("START");
+        textViewStart = (TextView) findViewById(R.id.startTime);
+        textViewStart.setText(start);
+
+        String end = getIntent().getExtras().getString("END");
+        textViewEnd = (TextView) findViewById(R.id.endTime);
+        textViewEnd.setText(end);
+
+        String duration = getIntent().getExtras().getString("TIME");
+        textViewTime = (TextView) findViewById(R.id.timeLeft);
+        textViewTime.setText("Starts in: " + duration);
 	}
 
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.event_viewer_menu, menu);
-		return true;
-	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
 }

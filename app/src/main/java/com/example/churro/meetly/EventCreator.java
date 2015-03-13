@@ -4,36 +4,55 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class EventCreator extends ActionBarActivity {
 
+    public List<Event> myEvents = new ArrayList<Event>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.event_creator_screen);
+
+        createEvent();
 	}
 
+    private void createEvent() {
+        EditText name = (EditText) findViewById(R.id.titleInput);
+        String eventName = name.getText().toString();
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.event_creator_menu, menu);
-		return true;
-	}
+        DatePicker startPicker = (DatePicker) findViewById(R.id.startDatePicker);
+        int startMonth = startPicker.getMonth();
+        int startDay = startPicker.getDayOfMonth();
+        int startYear = startPicker.getYear();
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+        TimePicker startTP = (TimePicker) findViewById(R.id.startTimePicker);
+        int startHour = startTP.getCurrentHour();
+        int startMin = startTP.getCurrentMinute();
 
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
-		}
+        Date startDate = new Date(startYear, startMonth, startDay, startHour, startMin);
 
-		return super.onOptionsItemSelected(item);
-	}
+        DatePicker endPicker = (DatePicker) findViewById(R.id.endDatePicker);
+        int endMonth = endPicker.getMonth();
+        int endDay = endPicker.getDayOfMonth();
+        int endYear = endPicker.getYear();
+
+        TimePicker endTP = (TimePicker) findViewById(R.id.endTimePicker);
+        int endHour = endTP.getCurrentHour();
+        int endMin = endTP.getCurrentMinute();
+
+        Date endDate = new Date(endYear, endMonth, endDay, endHour, endMin);
+
+        Event newEvent = new Event(eventName, startDate, endDate);
+        myEvents.add(newEvent);
+    }
+
+
 }
