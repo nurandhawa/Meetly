@@ -5,8 +5,10 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
 public class EventCreator extends ActionBarActivity {
@@ -26,6 +34,10 @@ public class EventCreator extends ActionBarActivity {
     private String eventName = "Current Event", eventDetail = "Fun stuff for everyone right?";
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
 
+    //Variable for saving file
+    String Message;
+    int data_block = 100;
+    String final_data="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +55,7 @@ public class EventCreator extends ActionBarActivity {
         Button date = (Button) findViewById(R.id.btnDate);
         Button timeStart = (Button) findViewById(R.id.btnStart);
         Button timeEnd = (Button) findViewById(R.id.btnEnd);
+        Button create = (Button) findViewById(R.id.btnCreate);
 
         name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,13 +91,61 @@ public class EventCreator extends ActionBarActivity {
                 setEventEndTime();
             }
         });
+
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEvent();
+            }
+        });
+    }
+
+    private void saveEvent() {
+        final_data = "";
+        try {
+            FileInputStream fis = openFileInput("events.txt");
+
+            InputStreamReader isr = new InputStreamReader(fis);
+            char[] data = new char[data_block];
+            int size;
+            try {
+                while((size = isr.read(data))>0) {
+                    String read_data = String.copyValueOf(data, 0, size);
+                    final_data+= read_data;
+                    data = new char[data_block];
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Message = final_data + " " + eventName + " " + textDate.getText().toString() + " " + textTimeStart.getText().toString() + " " +
+                textTimeEnd.getText().toString();
+        try {
+            FileOutputStream fou = openFileOutput("events.txt", MODE_WORLD_READABLE);
+            OutputStreamWriter osw = new OutputStreamWriter(fou);
+            try{
+                osw.write(Message);
+                osw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.i("Current Events", Message);
+        startActivity(new Intent(EventCreator.this, EventList.class));
     }
 
     private void setEventStartTime() {
         TimePickerDialog tpd = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                textTimeStart.setText(hourOfDay + ":" + minute);
+                textTimeStart.setText("EVENT_START: " + hourOfDay + " " + minute);
             }
         }, selectedHour, selectedMinute, true);
         tpd.show();
@@ -94,7 +155,7 @@ public class EventCreator extends ActionBarActivity {
         TimePickerDialog tpd = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                textTimeEnd.setText(hourOfDay + ":" + minute);
+                textTimeEnd.setText("EVENT_END: " + hourOfDay + " " + minute);
             }
         }, selectedHour, selectedMinute, true);
         tpd.show();
@@ -110,7 +171,7 @@ public class EventCreator extends ActionBarActivity {
         DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                textDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                textDate.setText("EVENT_DATE: " + dayOfMonth + " " + (monthOfYear) + " " + year);
             }
         }, selectedYear, selectedMonth, selectedDay);
         dpd.show();
@@ -120,7 +181,7 @@ public class EventCreator extends ActionBarActivity {
         dialogBuilder = new AlertDialog.Builder(this);
         final EditText textInput = new EditText(this);
 
-        eventName = "Event Name: ";
+        eventName = "EVENT_TITLE: ";
 
         dialogBuilder.setTitle("Name your Event!");
         dialogBuilder.setMessage("What is the name of your event?");
@@ -147,7 +208,7 @@ public class EventCreator extends ActionBarActivity {
         dialogBuilder = new AlertDialog.Builder(this);
         final EditText textInput = new EditText(this);
 
-        eventDetail = "have fun";
+        eventDetail = "EVENT_DETAIL: ";
 
         dialogBuilder.setTitle("Details");
         dialogBuilder.setMessage("Any additional information?");
@@ -156,7 +217,7 @@ public class EventCreator extends ActionBarActivity {
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                eventDetail = textInput.getText().toString();
+                eventDetail += textInput.getText().toString();
                 updateDisplay(eventDetail, R.id.txtDetail);
             }
         });

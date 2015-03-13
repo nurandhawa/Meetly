@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +14,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,13 +32,16 @@ public class EventList extends ActionBarActivity {
     final long minutesInMilli = secondsInMilli * 60;
     final long hoursInMilli = minutesInMilli * 60;
     final long daysInMilli = hoursInMilli * 24;
+    //Variable for saving/loading event information
+    int data_block = 100;
+    String final_data="";
 
     public static List<Event> myEvents = new ArrayList<Event>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_screen);
-
+        loadEvent();
         populateList();
         Collections.sort(myEvents, new EventListComparator());
 
@@ -43,6 +52,30 @@ public class EventList extends ActionBarActivity {
 
     }
 
+    private void loadEvent() {
+        final_data = "";
+        try {
+            FileInputStream fis = openFileInput("events.txt");
+
+            InputStreamReader isr = new InputStreamReader(fis);
+            char[] data = new char[data_block];
+            int size;
+            try {
+                while((size = isr.read(data))>0) {
+                    String read_data = String.copyValueOf(data, 0, size);
+                    final_data+= read_data;
+                    data = new char[data_block];
+                }
+                Log.i("Current Events", final_data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private void createEventButton() {
@@ -57,12 +90,88 @@ public class EventList extends ActionBarActivity {
 
     //TODO:: get list from other activity
     private void populateList() {
-        Date startDate1 = new Date(115,5,12,6,06); //year, month indexed0, day, hour, minute
-        Date endDate1 = new Date (115,6,12,6,30);
-        myEvents.add(new Event("Basketball Game" , startDate1, endDate1 ));
-        Date startDate2 = new Date(115,2, 10, 5, 30);
-        Date endDate2 = new Date(115,2, 12, 5, 30);
-        myEvents.add(new Event("Hockey game", startDate2, endDate2));
+//        Date startDate1 = new Date(115,5,12,6,06); //year, month indexed0, day, hour, minute
+//        Date endDate1 = new Date (115,6,12,6,30);
+//        myEvents.add(new Event("Basketball Game" , startDate1, endDate1 ));
+//        Date startDate2 = new Date(115,2, 10, 5, 30);
+//        Date endDate2 = new Date(115,2, 12, 5, 30);
+//        myEvents.add(new Event("Hockey game", startDate2, endDate2));
+
+        //Parse and create events
+
+        int tempYear = -1;
+        int tempMonth = -1;
+        int tempDay = -1;
+        int tempHourStart = -1;
+        int tempHourEnd = -1;
+        int tempMinStart = -1;
+        int tempMinEnd = -1;
+        int state = -1;
+        String tempName = "";
+
+        String delims = "[ ]+";
+        String[] tokens = final_data.split(delims);
+
+        for (int i = 0; i < tokens.length; i++) {
+            if (tokens[i].equals("EVENT_TITLE:")) {
+                state = 1;
+                if (tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
+                        tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1) {
+                    //Create event, reset all temps back to -1;
+                    Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
+                    Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
+                    myEvents.add(new Event(tempName, startDate, endDate));
+                    Log.i("Event Created: ", tempName);
+                    tempYear = -1;
+                    tempMonth = -1;
+                    tempDay = -1;
+                    tempHourStart = -1;
+                    tempHourEnd = -1;
+                    tempMinStart = -1;
+                    tempMinEnd = -1;
+                    state = -1;
+                    tempName = "";
+                }
+            }
+            if (tokens[i].equals("EVENT_DATE:")) {
+                state = -1;
+            }
+
+            if (!tokens[i].equals("EVENT_TITLE:") && state == 1) {
+                tempName += " " + tokens[i];
+            }
+            if (tokens[i].equals("EVENT_DATE:")) {
+                tempDay = Integer.parseInt(tokens[i+1]);
+                tempMonth = Integer.parseInt(tokens[i+2]);
+                tempYear = Integer.parseInt(tokens[i+3]) - 1900;
+            }
+            if (tokens[i].equals("EVENT_START:")) {
+                tempHourStart = Integer.parseInt(tokens[i+1]);
+                tempMinStart = Integer.parseInt(tokens[i+2]);
+            }
+            if (tokens[i].equals("EVENT_END:")) {
+                tempHourEnd = Integer.parseInt(tokens[i+1]);
+                tempMinEnd = Integer.parseInt(tokens[i+2]);
+            }
+            //Catch last event
+            if (i+1 == tokens.length && tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
+                    tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1) {
+                //Create event, reset all temps back to -1;
+                Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
+                Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
+                myEvents.add(new Event(tempName, startDate, endDate));
+                Log.i("Event Created: ", tempName);
+                tempYear = -1;
+                tempMonth = -1;
+                tempDay = -1;
+                tempHourStart = -1;
+                tempHourEnd = -1;
+                tempMinStart = -1;
+                tempMinEnd = -1;
+                state = -1;
+                tempName = "";
+            }
+        }
     }
 
     public class EventListComparator implements Comparator<Event> {
@@ -148,6 +257,7 @@ public class EventList extends ActionBarActivity {
                 Toast.makeText(EventList.this, message, Toast.LENGTH_LONG).show();
             }
         });
+
     }
 
     private String findTimeRemaining(Event eventClicked, Date now) {
