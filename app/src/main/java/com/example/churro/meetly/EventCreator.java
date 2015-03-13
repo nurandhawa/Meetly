@@ -15,44 +15,49 @@ import java.util.List;
 
 public class EventCreator extends ActionBarActivity {
 
-    public List<Event> myEvents = new ArrayList<Event>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.event_creator_screen);
 
-        createEvent();
+//        createEvent();
 	}
 
-    private void createEvent() {
-        EditText name = (EditText) findViewById(R.id.titleInput);
-        String eventName = name.getText().toString();
+//    private void createEvent() {
+//        EditText name = (EditText) findViewById(R.id.titleInput);
+//        String eventName = name.getText().toString();
+//
+//        DatePicker startPicker = (DatePicker) findViewById(R.id.startDatePicker);
+//        int startMonth = startPicker.getMonth();
+//        int startDay = startPicker.getDayOfMonth();
+//        int startYear = startPicker.getYear();
+//
+//        TimePicker startTP = (TimePicker) findViewById(R.id.startTimePicker);
+//        int startHour = startTP.getCurrentHour();
+//        int startMin = startTP.getCurrentMinute();
+//
+//        Date startDate = new Date(startYear, startMonth, startDay, startHour, startMin);
+//
+//        DatePicker endPicker = (DatePicker) findViewById(R.id.endDatePicker);
+//        int endMonth = endPicker.getMonth();
+//        int endDay = endPicker.getDayOfMonth();
+//        int endYear = endPicker.getYear();
+//
+//        TimePicker endTP = (TimePicker) findViewById(R.id.endTimePicker);
+//        int endHour = endTP.getCurrentHour();
+//        int endMin = endTP.getCurrentMinute();
+//
+//        Date endDate = new Date(endYear, endMonth, endDay, endHour, endMin);
+//
+//        Event newEvent = new Event(eventName, startDate, endDate);
+//        myEvents.add(newEvent);
+//        Date date1 = new Date(115,3,23,6,30);
+//        Date date2 = new Date(115,3,24,6,30);
 
-        DatePicker startPicker = (DatePicker) findViewById(R.id.startDatePicker);
-        int startMonth = startPicker.getMonth();
-        int startDay = startPicker.getDayOfMonth();
-        int startYear = startPicker.getYear();
-
-        TimePicker startTP = (TimePicker) findViewById(R.id.startTimePicker);
-        int startHour = startTP.getCurrentHour();
-        int startMin = startTP.getCurrentMinute();
-
-        Date startDate = new Date(startYear, startMonth, startDay, startHour, startMin);
-
-        DatePicker endPicker = (DatePicker) findViewById(R.id.endDatePicker);
-        int endMonth = endPicker.getMonth();
-        int endDay = endPicker.getDayOfMonth();
-        int endYear = endPicker.getYear();
-
-        TimePicker endTP = (TimePicker) findViewById(R.id.endTimePicker);
-        int endHour = endTP.getCurrentHour();
-        int endMin = endTP.getCurrentMinute();
-
-        Date endDate = new Date(endYear, endMonth, endDay, endHour, endMin);
-
-        Event newEvent = new Event(eventName, startDate, endDate);
-        myEvents.add(newEvent);
-    }
+//        Event event = new Event("Test" , date1, date2);
+//        EventList.myEvents.add(event);
+//    }
 
 
 }

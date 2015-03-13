@@ -27,7 +27,7 @@ public class EventList extends ActionBarActivity {
     final long hoursInMilli = minutesInMilli * 60;
     final long daysInMilli = hoursInMilli * 24;
 
-    public List<Event> myEvents = new ArrayList<Event>();
+    public static List<Event> myEvents = new ArrayList<Event>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +116,7 @@ public class EventList extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 Event eventClicked = myEvents.get(position);
-                //TODO: open new activity once clicked
+
                 //TextView name = (TextView) findViewById(R.id.eventName);
                 //name.setText(eventClicked.getTitle());
                 String name = (eventClicked.getTitle());

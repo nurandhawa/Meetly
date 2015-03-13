@@ -31,6 +31,8 @@ public class EventViewer extends ActionBarActivity {
         String duration = getIntent().getExtras().getString("TIME");
         textViewTime = (TextView) findViewById(R.id.timeLeft);
         textViewTime.setText("Starts in: " + duration);
+
+
 	}
 
 
