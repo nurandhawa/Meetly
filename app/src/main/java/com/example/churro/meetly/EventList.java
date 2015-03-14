@@ -111,10 +111,12 @@ public class EventList extends ActionBarActivity {
 
         String delims = "[ ]+";
         String[] tokens = final_data.split(delims);
+        Log.i("Starting", "parser");
 
         for (int i = 0; i < tokens.length; i++) {
+            Log.i("current token: ", tokens[i]);
+            Log.i("Current State: ", String.valueOf(state));
             if (tokens[i].equals("EVENT_TITLE:")) {
-                state = 1;
                 if (tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
                         tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1) {
                     //Create event, reset all temps back to -1;
@@ -132,12 +134,14 @@ public class EventList extends ActionBarActivity {
                     state = -1;
                     tempName = "";
                 }
+                state = 1;
             }
             if (tokens[i].equals("EVENT_DATE:")) {
-                state = -1;
+                state = 0;
             }
 
             if (!tokens[i].equals("EVENT_TITLE:") && state == 1) {
+                Log.i("checking event title", "new EVENT_TITLE found");
                 tempName += " " + tokens[i];
             }
             if (tokens[i].equals("EVENT_DATE:")) {
