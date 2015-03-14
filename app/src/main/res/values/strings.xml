@@ -8,6 +8,7 @@
     <string name="title_activity_event_list">EventList</string>
     <string name="title_activity_event_viewer">EventViewer</string>
     <string name="title_activity_event_creator">EventCreator</string>
+    <string name="choose_location">Choose Location</string>
 
     <string name="title">%1$d</string>
     <string name="date">%1$d</string>

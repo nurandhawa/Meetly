@@ -56,6 +56,7 @@ public class EventCreator extends ActionBarActivity {
         Button timeStart = (Button) findViewById(R.id.btnStart);
         Button timeEnd = (Button) findViewById(R.id.btnEnd);
         Button create = (Button) findViewById(R.id.btnCreate);
+        Button location = (Button) findViewById(R.id.btn_location);
 
         name.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +97,14 @@ public class EventCreator extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 saveEvent();
+            }
+        });
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EventCreator.this, EventLocation.class);
+                startActivity(intent);
             }
         });
     }

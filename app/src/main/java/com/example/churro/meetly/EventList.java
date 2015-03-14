@@ -234,6 +234,7 @@ public class EventList extends ActionBarActivity {
                 //name.setText(eventClicked.getTitle());
                 String name = (eventClicked.getTitle());
 
+
 //                TextView start = (TextView) findViewById(R.id.startTime);
                 String start = (eventClicked.getStart().toString());
 
@@ -320,6 +321,7 @@ public class EventList extends ActionBarActivity {
             // end:
             TextView duration = (TextView) itemView.findViewById(R.id.item_txtEnd);
 //            endText.setText("" + e.getEnd());
+
 
             long difference = calculateDuration(e);
 
