@@ -19,6 +19,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,12 +34,19 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
-public class EventCreator extends ActionBarActivity {
+public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapClickListener {
     private AlertDialog.Builder dialogBuilder;
+
+    private GoogleMap mMap;
+
     //Temp strings for checking
     EditText textDate, textTimeStart, textTimeEnd;
     private String eventName = "Current Event", eventDetail = "Fun stuff for everyone right?";
     private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
+    private final LatLng DEFAULT_LOCATION = new LatLng(49.187500,-122.849000);
+    private double LATITUDE;
+    private double LONGITUDE;
+
 
     //Variable for saving file
     String Message;
@@ -41,17 +55,27 @@ public class EventCreator extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 		setContentView(R.layout.event_creator_screen);
+        LATITUDE = 49.187500;
+        LONGITUDE = -122.849000;
         setButtons();
+        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        mMap.setOnMapClickListener(this);
+        setDefaultMap();
         textDate = (EditText) findViewById(R.id.txtDate);
         textTimeStart = (EditText) findViewById(R.id.txtStart);
         textTimeEnd = (EditText) findViewById(R.id.txtEnd);
 	}
 
+    private void setDefaultMap() {
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 12);
+        mMap.animateCamera(update);
+    }
+
     private void setButtons() {
         Button name = (Button) findViewById(R.id.btnName);
-        Button detail = (Button) findViewById(R.id.btnDetail);
+       // Button detail = (Button) findViewById(R.id.btnDetail);
         Button date = (Button) findViewById(R.id.btnDate);
         Button timeStart = (Button) findViewById(R.id.btnStart);
         Button timeEnd = (Button) findViewById(R.id.btnEnd);
@@ -64,12 +88,12 @@ public class EventCreator extends ActionBarActivity {
             }
         });
 
-        detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setEventDetail();
-            }
-        });
+//        detail.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setEventDetail();
+//            }
+//        });
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +127,7 @@ public class EventCreator extends ActionBarActivity {
     private void saveEvent() {
         final_data = "";
         try {
-            FileInputStream fis = openFileInput("events.txt");
+            FileInputStream fis = openFileInput("event.txt");
 
             InputStreamReader isr = new InputStreamReader(fis);
             char[] data = new char[data_block];
@@ -123,9 +147,9 @@ public class EventCreator extends ActionBarActivity {
         }
 
         Message = final_data + " " + eventName + " " + textDate.getText().toString() + " " + textTimeStart.getText().toString() + " " +
-                textTimeEnd.getText().toString();
+                textTimeEnd.getText().toString() + " EVENT_LOCATION: " + Double.toString(LATITUDE) + " " + Double.toString(LONGITUDE);
         try {
-            FileOutputStream fou = openFileOutput("events.txt", MODE_WORLD_READABLE);
+            FileOutputStream fou = openFileOutput("event.txt", MODE_WORLD_READABLE);
             OutputStreamWriter osw = new OutputStreamWriter(fou);
             try{
                 osw.write(Message);
@@ -204,38 +228,49 @@ public class EventCreator extends ActionBarActivity {
         dialogEventName.show();
     }
 
-    private void setEventDetail() {
-        dialogBuilder = new AlertDialog.Builder(this);
-        final EditText textInput = new EditText(this);
+//    private void setEventDetail() {
+//        dialogBuilder = new AlertDialog.Builder(this);
+//        final EditText textInput = new EditText(this);
+//
+//        eventDetail = "EVENT_DETAIL: ";
+//
+//        dialogBuilder.setTitle("Details");
+//        dialogBuilder.setMessage("Any additional information?");
+//        dialogBuilder.setView(textInput);
+//
+//        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                eventDetail += textInput.getText().toString();
+//                updateDisplay(eventDetail, R.id.txtDetail);
+//            }
+//        });
+//
+//        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
 
-        eventDetail = "EVENT_DETAIL: ";
-
-        dialogBuilder.setTitle("Details");
-        dialogBuilder.setMessage("Any additional information?");
-        dialogBuilder.setView(textInput);
-
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                eventDetail += textInput.getText().toString();
-                updateDisplay(eventDetail, R.id.txtDetail);
-            }
-        });
-
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        AlertDialog dialogEventName = dialogBuilder.create();
-        dialogEventName.show();
-    }
+//        AlertDialog dialogEventName = dialogBuilder.create();
+//        dialogEventName.show();
+//    }
 
     private void updateDisplay(final String message, final int viewId) {
         TextView textView = (TextView) findViewById(viewId);
         textView.setText(message);
     }
 
+    @Override
+    public void onMapClick(LatLng pos) {
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(pos).title("Event Here"));
+        Log.i("Location: ", pos.toString());
+        String temp = pos.toString();
+        String delims = "[ ,)(]+";
+        String[] tokens = temp.split(delims);
+        LATITUDE = Double.parseDouble(tokens[1]);
+        LONGITUDE = Double.parseDouble(tokens[2]);
+    }
 }

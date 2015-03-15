@@ -6,8 +6,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 
 public class EventViewer extends ActionBarActivity {
+
+    private GoogleMap mMap;
+
     public static TextView textViewName;
     public static TextView textViewStart;
     public static TextView textViewEnd;
@@ -32,8 +42,15 @@ public class EventViewer extends ActionBarActivity {
         textViewTime = (TextView) findViewById(R.id.timeLeft);
         textViewTime.setText("Starts in: " + duration);
 
+        double lat = getIntent().getExtras().getDouble("LAT");
+        double lng = getIntent().getExtras().getDouble("LNG");
+        final LatLng location = new LatLng(lat,lng);
 
-	}
+        mMap.addMarker(new MarkerOptions().position(location).title("Event Here"));
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(location, 12);
+        mMap.animateCamera(update);
+
+    }
 
 
 

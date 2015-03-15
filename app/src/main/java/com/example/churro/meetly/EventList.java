@@ -55,7 +55,7 @@ public class EventList extends ActionBarActivity {
     private void loadEvent() {
         final_data = "";
         try {
-            FileInputStream fis = openFileInput("events.txt");
+            FileInputStream fis = openFileInput("event.txt");
 
             InputStreamReader isr = new InputStreamReader(fis);
             char[] data = new char[data_block];
@@ -106,6 +106,8 @@ public class EventList extends ActionBarActivity {
         int tempHourEnd = -1;
         int tempMinStart = -1;
         int tempMinEnd = -1;
+        double tempLat = -1;
+        double tempLng = -1;
         int state = -1;
         String tempName = "";
 
@@ -118,11 +120,11 @@ public class EventList extends ActionBarActivity {
             Log.i("Current State: ", String.valueOf(state));
             if (tokens[i].equals("EVENT_TITLE:")) {
                 if (tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
-                        tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1) {
+                        tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1 && tempLat != -1 && tempLng != -1) {
                     //Create event, reset all temps back to -1;
                     Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
                     Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
-                    myEvents.add(new Event(tempName, startDate, endDate));
+                    myEvents.add(new Event(tempName, startDate, endDate, tempLat, tempLng));
                     Log.i("Event Created: ", tempName);
                     tempYear = -1;
                     tempMonth = -1;
@@ -131,7 +133,8 @@ public class EventList extends ActionBarActivity {
                     tempHourEnd = -1;
                     tempMinStart = -1;
                     tempMinEnd = -1;
-                    state = -1;
+                    tempLat = -1;
+                    tempLng = -1;
                     tempName = "";
                 }
                 state = 1;
@@ -157,13 +160,17 @@ public class EventList extends ActionBarActivity {
                 tempHourEnd = Integer.parseInt(tokens[i+1]);
                 tempMinEnd = Integer.parseInt(tokens[i+2]);
             }
+            if (tokens[i].equals("EVENT_LOCATION:")) {
+                tempLat = Double.parseDouble(tokens[i+1]);
+                tempLng = Double.parseDouble(tokens[i+2]);
+            }
             //Catch last event
             if (i+1 == tokens.length && tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
                     tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1) {
                 //Create event, reset all temps back to -1;
                 Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
                 Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
-                myEvents.add(new Event(tempName, startDate, endDate));
+                myEvents.add(new Event(tempName, startDate, endDate, tempLat, tempLng));
                 Log.i("Event Created: ", tempName);
                 tempYear = -1;
                 tempMonth = -1;
@@ -246,11 +253,16 @@ public class EventList extends ActionBarActivity {
                 String difference = findTimeRemaining(eventClicked , now);
                 //EventViewer.textViewTime.setText(difference);
 
+                double lat = (eventClicked.getLat());
+                double lng = (eventClicked.getLng());
+
                 Bundle b = new Bundle();
                 b.putString("NAME", name);
                 b.putString("START" , start);
                 b.putString("END" , end);
                 b.putString("TIME", difference);
+                b.putDouble("LAT", lat);
+                b.putDouble("LNG", lng);
 
                 Intent intent = new Intent (EventList.this, EventViewer.class);
                 intent.putExtras(b);

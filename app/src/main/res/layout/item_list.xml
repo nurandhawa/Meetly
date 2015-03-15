@@ -9,10 +9,8 @@
         android:text="Name shown here"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/item_txtStart"
-        android:layout_toStartOf="@+id/item_txtStart"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="15dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,9 +18,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Start time shown here"
         android:id="@+id/item_txtStart"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/item_txtName"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="75dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,9 +28,17 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="End date starts here"
         android:id="@+id/item_txtEnd"
+        android:layout_marginTop="75dp"
         android:layout_below="@+id/item_txtStart"
-        android:layout_alignRight="@+id/item_txtStart"
-        android:layout_alignEnd="@+id/item_txtStart"
-        android:layout_marginTop="15dp" />
+        android:layout_alignParentLeft="true"
+        />
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/item_txtEnd"
+        android:id="@+id/map"
+        />
 
 </RelativeLayout>

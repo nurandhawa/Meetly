@@ -15,50 +15,52 @@
         android:text="Name"
         android:id="@+id/btnName"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentRight="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Event Description"
-        android:id="@+id/btnDetail"
-        android:layout_below="@+id/btnName"
-        android:layout_centerHorizontal="true" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Event Description"-->
+        <!--android:id="@+id/btnDetail"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true" />-->
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set Date"
         android:id="@+id/btnDate"
-        android:layout_below="@+id/btnDetail"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/btnName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CurrentName"
         android:id="@+id/txtName"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="172dp" />
+        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Details"
-        android:id="@+id/txtDetail"
-        android:layout_marginTop="24dp"
-        android:layout_alignTop="@+id/txtName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Current Details"-->
+        <!--android:id="@+id/txtDetail"-->
+        <!--android:layout_marginTop="24dp"-->
+        <!--android:layout_alignTop="@+id/txtName"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--/>-->
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="StartTime"
         android:id="@+id/txtStart"
-        android:layout_below="@+id/txtDetail"
+        android:layout_below="@+id/txtName"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -76,18 +78,18 @@
         android:layout_height="wrap_content"
         android:text="Set End Time"
         android:id="@+id/btnEnd"
-        android:layout_below="@+id/btnDate"
-        android:layout_toRightOf="@+id/btnDate"
-        android:layout_toEndOf="@+id/btnDate" />
+        android:layout_alignTop="@+id/btnStart"
+        android:layout_alignRight="@+id/map"
+        android:layout_alignEnd="@+id/map" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Set Start Time"
         android:id="@+id/btnStart"
-        android:layout_below="@+id/btnDate"
-        android:layout_toLeftOf="@+id/btnDate"
-        android:layout_toStartOf="@+id/btnDate" />
+        android:layout_below="@+id/txtDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -106,5 +108,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/btnEnd"
+        android:layout_above="@+id/btnCreate"
+        android:id="@+id/map"
+        />
 
 </RelativeLayout>

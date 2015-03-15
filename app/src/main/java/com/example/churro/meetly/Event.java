@@ -7,11 +7,15 @@ public class Event {
     String title;
     Date start;
     Date end;
+    Double lat;
+    Double lng;
 
-    public Event(String title, Date start, Date end) {
+    public Event(String title, Date start, Date end, Double lat, Double lng) {
         this.title = title;
         this.start = start;
         this.end = end;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public String getTitle() {
@@ -24,6 +28,14 @@ public class Event {
 
     public Date getEnd() {
         return end;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public Double getLng() {
+        return lng;
     }
 
 
