@@ -1,0 +1,19 @@
+CHURRO:
+
+Scrum master:NoorUllah
+Aman:
+ Create event activity
+ Google Maps integration
+ Saving files to device
+ Possible to make other activities use ArrayList
+
+Tejpal:
+ Created list activity
+ Created event detail screen
+ Comparator to sort list
+
+NoorUllah:
+ Welcome screen
+ Helped with maps
+
+Meera:

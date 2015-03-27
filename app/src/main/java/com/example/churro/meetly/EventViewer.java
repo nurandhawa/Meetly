@@ -22,10 +22,10 @@ public class EventViewer extends ActionBarActivity {
     public static TextView textViewStart;
     public static TextView textViewEnd;
     public static TextView textViewTime;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_viewer_screen);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.event_viewer_screen);
         String name = getIntent().getExtras().getString("NAME");
         textViewName = (TextView) findViewById(R.id.eventName);
         textViewName.setText(name);

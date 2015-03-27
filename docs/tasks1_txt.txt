@@ -1,0 +1,15 @@
+CHURRO:
+
+Scrum master:
+Aman:
+ Create event activity
+ Saving files to device
+ Possible to make other activities use ArrayList
+Google integration
+Tejpal:
+ Created list activity
+ Created event detail screen
+ Comparator to sort list
+NoorUllah:
+ Welcome screen
+Meera:

@@ -53,10 +53,10 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
     int data_block = 100;
     String final_data="";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		setContentView(R.layout.event_creator_screen);
+        setContentView(R.layout.event_creator_screen);
         LATITUDE = 49.187500;
         LONGITUDE = -122.849000;
         setButtons();
@@ -66,7 +66,7 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         textDate = (EditText) findViewById(R.id.txtDate);
         textTimeStart = (EditText) findViewById(R.id.txtStart);
         textTimeEnd = (EditText) findViewById(R.id.txtEnd);
-	}
+    }
 
     private void setDefaultMap() {
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, 12);
@@ -75,7 +75,7 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
 
     private void setButtons() {
         Button name = (Button) findViewById(R.id.btnName);
-       // Button detail = (Button) findViewById(R.id.btnDetail);
+        // Button detail = (Button) findViewById(R.id.btnDetail);
         Button date = (Button) findViewById(R.id.btnDate);
         Button timeStart = (Button) findViewById(R.id.btnStart);
         Button timeEnd = (Button) findViewById(R.id.btnEnd);
@@ -105,7 +105,7 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         timeStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               setEventStartTime();
+                setEventStartTime();
             }
         });
 
