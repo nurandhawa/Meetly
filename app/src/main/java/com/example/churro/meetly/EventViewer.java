@@ -46,6 +46,7 @@ public class EventViewer extends ActionBarActivity {
         double lng = getIntent().getExtras().getDouble("LNG");
         final LatLng location = new LatLng(lat,lng);
 
+        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         mMap.addMarker(new MarkerOptions().position(location).title("Event Here"));
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(location, 12);
         mMap.animateCamera(update);
