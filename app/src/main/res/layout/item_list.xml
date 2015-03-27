@@ -20,7 +20,7 @@
         android:id="@+id/item_txtStart"
         android:layout_below="@+id/item_txtName"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="75dp" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,17 +28,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="End date starts here"
         android:id="@+id/item_txtEnd"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/item_txtStart"
         android:layout_alignParentLeft="true"
-        />
-    <fragment
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/item_txtEnd"
-        android:id="@+id/map"
         />
 
 </RelativeLayout>
