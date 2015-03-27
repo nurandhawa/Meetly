@@ -8,11 +8,11 @@
     <string name="title_activity_event_list">EventList</string>
     <string name="title_activity_event_viewer">EventViewer</string>
     <string name="title_activity_event_creator">EventCreator</string>
-
     <string name="title">%1$d</string>
     <string name="date">%1$d</string>
     <string name="time">%1$d</string>
     <string name="duration">%1$d</string>
-
+    <string name="title_activity_event_editor">EventEditor</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

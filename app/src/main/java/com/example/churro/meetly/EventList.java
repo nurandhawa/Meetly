@@ -3,6 +3,7 @@ package com.example.churro.meetly;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -44,12 +45,22 @@ public class EventList extends ActionBarActivity {
         loadEvent();
         populateList();
         Collections.sort(myEvents, new EventListComparator());
-
+        deleteDuplications();
         populateListView();
         makeItemsClickable();
 
         createEventButton();
 
+    }
+
+    private void deleteDuplications() {
+        for (int i = 0; i < myEvents.size()-1; ++i) {
+           for (int j = 1; j < myEvents.size(); ++j) {
+               if (myEvents.get(i).equals(myEvents.get(j))) {
+                   myEvents.remove(j);
+               }
+           }
+        }
     }
 
     private void loadEvent() {
@@ -170,7 +181,6 @@ public class EventList extends ActionBarActivity {
                 //Create event, reset all temps back to -1;
                 Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
                 Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
-                myEvents.add(new Event(tempName, startDate, endDate, tempLat, tempLng));
                 Log.i("Event Created: ", tempName);
                 tempYear = -1;
                 tempMonth = -1;
@@ -243,10 +253,18 @@ public class EventList extends ActionBarActivity {
 
 //                TextView start = (TextView) findViewById(R.id.startTime);
                 String start = (eventClicked.getStart().toString());
+                int year = eventClicked.getStart().getYear();
+                int month = eventClicked.getStart().getMonth();
+                int day = eventClicked.getStart().getDay();
+                int startHour = eventClicked.getStart().getHours();
+                int startMin = eventClicked.getStart().getMinutes();
+                int startSec = eventClicked.getStart().getSeconds();
 
 //                TextView end = (TextView) findViewById(R.id.endTime);
                 String end = (eventClicked.getEnd().toString());
-
+                int endHour = eventClicked.getEnd().getHours();
+                int endMin = eventClicked.getEnd().getMinutes();
+                int endSec = eventClicked.getEnd().getSeconds();
 //                TextView timeRemaining = (TextView) findViewById(R.id.timeLeft);
                 Date now = new Date();
 
@@ -257,12 +275,22 @@ public class EventList extends ActionBarActivity {
                 double lng = (eventClicked.getLng());
 
                 Bundle b = new Bundle();
+               // b.putInt("POS" , position);
                 b.putString("NAME", name);
                 b.putString("START" , start);
                 b.putString("END" , end);
                 b.putString("TIME", difference);
                 b.putDouble("LAT", lat);
                 b.putDouble("LNG", lng);
+                b.putInt("DAY" , day);
+                b.putInt("MON" , month);
+                b.putInt("YEAR" , year);
+                b.putInt("SH" , startHour);
+                b.putInt("SM" , startMin);
+                b.putInt("SS" , startSec);
+                b.putInt("EH" , endHour);
+                b.putInt("EM" , endMin);
+                b.putInt("ES" , endSec);
 
                 Intent intent = new Intent (EventList.this, EventViewer.class);
                 intent.putExtras(b);
@@ -361,5 +389,7 @@ public class EventList extends ActionBarActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
+
 
 }

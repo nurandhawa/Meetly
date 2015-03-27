@@ -57,6 +57,19 @@ public class EventEditor extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_editor);
 
+        //String name = getIntent().getExtras().getString("NAME");
+        String name = "EVENT_TITLE:" + getIntent().getExtras().getString("NAME");
+        String date = "EVENT_DATE:" + getIntent().getExtras().getInt("DAY") +
+                getIntent().getExtras().getInt("MON") + getIntent().getExtras().getInt("YEAR");
+        String timeStart = "EVENT_START:" + getIntent().getExtras().getInt("SH") +
+                getIntent().getExtras().getInt("SM") + getIntent().getExtras().getInt("SS");
+        String timeEnd = "EVENT_END:" + getIntent().getExtras().getInt("EH") +
+                getIntent().getExtras().getInt("EM") + getIntent().getExtras().getInt("ES");
+        String latlon = "EVENT_LOCATION:" + getIntent().getExtras().getDouble("LAT") +
+                getIntent().getExtras().getDouble("LNG");
+
+        String eventToDelete = name + date + timeStart + timeEnd + latlon;
+
         loadEvent();
         populateList();
         int position = getIntent().getExtras().getInt("POS");
@@ -141,6 +154,16 @@ public class EventEditor extends ActionBarActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteEvent(String eventInfo) {
+        String delims = "[ ]+";
+        String[] tokens = eventInfo.split(delims);
+        Log.i("Starting", "parser");
+
+
+
+
     }
 
 
@@ -350,18 +373,17 @@ public class EventEditor extends ActionBarActivity {
             e.printStackTrace();
         }
         Log.i("Current Events", Message);
-        Bundle b = new Bundle();
-        // b.putInt("POS" , position);
-        b.putString("NAME", eventName);
-        b.putString("START" , textTimeStart.getText().toString());
-        b.putString("END" , textTimeEnd.getText().toString());
-        b.putString("TIME", "test time left");
-        b.putDouble("LAT", 463.6666);
-        b.putDouble("LNG", 63.666);
+//        Bundle b = new Bundle();
+//        // b.putInt("POS" , position);
+//        b.putString("NAME", eventName);
+//        b.putString("START" , textTimeStart.getText().toString());
+//        b.putString("END" , textTimeEnd.getText().toString());
+//        b.putString("TIME", "test time left");
+//        b.putDouble("LAT", 463.6666);
+//        b.putDouble("LNG", 63.666);
 
         Intent intent = new Intent (EventEditor.this, EventViewer.class);
-        intent.putExtras(b);
-
+//        intent.putExtras(b);
         startActivity(intent);
 
     }
