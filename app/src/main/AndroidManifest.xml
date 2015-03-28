@@ -80,6 +80,10 @@
             android:name=".EventEditor"
             android:label="@string/title_activity_event_editor" >
         </activity>
+        <activity
+            android:name=".LoginScreen"
+            android:label="@string/title_activity_login_screen" >
+        </activity>
     </application>
 
 </manifest>

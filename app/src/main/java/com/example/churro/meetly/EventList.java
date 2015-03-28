@@ -50,6 +50,20 @@ public class EventList extends ActionBarActivity {
         makeItemsClickable();
 
         createEventButton();
+        createLoginButton();
+
+    }
+
+    private void createLoginButton() {
+
+        Button BLogin = (Button) findViewById(R.id.btn_login);
+        BLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EventList.this, LoginScreen.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

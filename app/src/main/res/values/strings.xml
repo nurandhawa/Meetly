@@ -14,7 +14,6 @@
     <string name="duration">%1$d</string>
     <string name="title_activity_event_editor">Event Editor</string>
     <string name="hello_world">Hello world!</string>
-
     <string name="setName">Set Name</string>
     <string name="setDate">Set Date</string>
     <string name="currentName">Event Name</string>
@@ -24,5 +23,6 @@
     <string name="setStartTime">Set Start Time</string>
     <string name="eventDate">Event Date</string>
     <string name="save">Save Event</string>
+    <string name="title_activity_login_screen">LoginScreen</string>
 
 </resources>
