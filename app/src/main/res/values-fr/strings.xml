@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Meetly</string>
+    <string name="team_name">team Churro</string>
+    <string name="skip">sauter</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="title_activity_event_list">Liste de l'Événement</string>
+    <string name="title_activity_event_viewer">Observateur d'Événements</string>
+    <string name="title_activity_event_creator">Créateur de l'Événment</string>
+    <string name="title">%1$d</string>
+    <string name="date">%1$d</string>
+    <string name="time">%1$d</string>
+    <string name="duration">%1$d</string>
+    <string name="title_activity_event_editor">Éditeur d'Événements</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="setName">Nom du jeu</string>
+    <string name="setDate">Régler la date</string>
+    <string name="currentName">Nom de l'Événement</string>
+    <string name="startTime">Heure de début</string>
+    <string name="endTime">Heure de fin</string>
+    <string name="setEndTime">Réglez l'heure de fin</string>
+    <string name="setStartTime">Définir heure de début</string>
+    <string name="eventDate">Date de l'événement</string>
+    <string name="save">Enregistrer l'événement</string>
+
+</resources>

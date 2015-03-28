@@ -12,7 +12,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="@string/setName"
         android:id="@+id/btnName"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true" />
@@ -29,7 +29,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Date"
+        android:text="@string/setDate"
         android:id="@+id/btnDate"
         android:layout_below="@+id/btnName"
         android:layout_alignParentRight="true"
@@ -38,7 +38,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CurrentName"
+        android:text="@string/currentName"
         android:id="@+id/txtName"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -58,7 +58,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="StartTime"
+        android:text="@string/startTime"
         android:id="@+id/txtStart"
         android:layout_below="@+id/txtName"
         android:layout_alignParentLeft="true"
@@ -67,7 +67,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EndTime"
+        android:text="@string/endTime"
         android:id="@+id/txtEnd"
         android:layout_below="@+id/txtStart"
         android:layout_alignParentLeft="true"
@@ -76,7 +76,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set End Time"
+        android:text="@string/setEndTime"
         android:id="@+id/btnEnd"
         android:layout_alignTop="@+id/btnStart"
         android:layout_alignRight="@+id/map"
@@ -85,7 +85,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Start Time"
+        android:text="@string/setStartTime"
         android:id="@+id/btnStart"
         android:layout_below="@+id/txtDate"
         android:layout_alignParentLeft="true"
@@ -94,7 +94,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Event Date"
+        android:text="@string/eventDate"
         android:id="@+id/txtDate"
         android:layout_below="@+id/txtEnd"
         android:layout_alignParentLeft="true"
@@ -103,7 +103,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save/Create Event"
+        android:text="@string/save"
         android:id="@+id/btnCreate"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
