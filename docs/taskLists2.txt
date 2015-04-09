@@ -1,0 +1,9 @@
+Tasks for iterations 2 'Meetly'
+
+Scrum Master: Aman Sandhu
+
+Aman: Internationalizing the application with french as the second language. 
+
+Tejpal: Editing and Deleting the events.
+
+NoorUllah: Logging in and out. 

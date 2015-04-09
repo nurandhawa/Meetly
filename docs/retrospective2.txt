@@ -1,0 +1,8 @@
+
+- Should share the workload better than iteration 1. Explicitly break project 
+  into tasks and deligate them to group members. 
+
+- Conduct more group meetings and involve group members in more discussion. 
+  Start ahead of time to complete before deadline. 
+
+- Brainstrom to include and implement all the uses cases. 
