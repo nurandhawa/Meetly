@@ -104,25 +104,7 @@ public class EventList extends ActionBarActivity {
 
     public class EventListComparator implements Comparator<MeetlyServer.MeetlyEvent> {
         public int compare(MeetlyServer.MeetlyEvent event1 , MeetlyServer.MeetlyEvent event2) {
-            if (event1.startTime.get(Calendar.MONTH) > event2.startTime.get(Calendar.MONTH)) {
-                return 1;
-            } else if (event1.startTime.get(Calendar.MONTH) < event2.startTime.get(Calendar.MONTH)) {
-                return -1;
-            } else {
-                if (event1.startTime.get(Calendar.DAY_OF_MONTH) > event2.startTime.get(Calendar.DAY_OF_MONTH)) {
-                    return 1;
-                } else if (event1.startTime.get(Calendar.DAY_OF_MONTH) < event2.startTime.get(Calendar.DAY_OF_MONTH)) {
-                    return -1;
-                } else {
-                    if (event1.startTime.getTimeInMillis() > event2.startTime.getTimeInMillis()) {
-                        return 1;
-                    } else if (event1.startTime.getTimeInMillis() < event2.startTime.getTimeInMillis()){
-                        return  -1;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
+            return event2.startTime.getTimeInMillis() - event2.startTime.getTimeInMillis();
         }
     }
 
