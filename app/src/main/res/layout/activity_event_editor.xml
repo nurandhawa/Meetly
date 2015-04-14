@@ -17,15 +17,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true" />
 
-    <!--<Button-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Event Description"-->
-    <!--android:id="@+id/btnDetail"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_alignParentEnd="true" />-->
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,17 +34,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         />
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Current Details"-->
-    <!--android:id="@+id/txtDetail"-->
-    <!--android:layout_marginTop="24dp"-->
-    <!--android:layout_alignTop="@+id/txtName"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--/>-->
 
     <EditText
         android:layout_width="wrap_content"

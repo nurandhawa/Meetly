@@ -74,6 +74,7 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
     }
 
     private void setUp() {
+        conflictName = " ";
         conflictFound = -1;
         saveFile = 1;
         userName = AppState.getName();
@@ -122,10 +123,12 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
 
     private void saveEvent() {
         Log.i("Save event", "started");
-        Date tempStartDate = new Date(selectedYear, selectedMonth, selectedDay, startHour, startMin);
-        Date tempEndDate = new Date(selectedYear, selectedMonth, selectedDay, endHour, endMin);
+        Date tempStartDate = new Date(selectedYear-1900, selectedMonth, selectedDay, startHour, startMin);
+        Date tempEndDate = new Date(selectedYear-1900, selectedMonth, selectedDay, endHour, endMin);
         startTime.setTime(tempStartDate);
         endTime.setTime(tempEndDate);
+        Log.i("StartTime: ", String.valueOf(startTime.get(Calendar.YEAR)) + "/" + String.valueOf(startTime.get(Calendar.MONTH)) + "/" + String.valueOf(startTime.get(Calendar.MINUTE)));
+
 
         if(userToken == -1) {
             Toast.makeText(EventCreator.this, "You are not logged in", Toast.LENGTH_LONG).show();
@@ -133,9 +136,20 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    publishEvent();
+                    checkForConflict();
                 }
             }).start();
+            if(conflictFound == 1) {
+                conflictNotice();
+            }
+            if(saveFile == 1) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        publishEvent();
+                    }
+                }).start();
+            }
         } else {
             Toast.makeText(EventCreator.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
         }
@@ -143,52 +157,31 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
     }
 
     private void publishEvent() {
+        MeetlyServer server = AppState.getServer();
+
+        try{
+            server.publishEvent(userName, userToken, eventName, startTime, endTime, LATITUDE, LONGITUDE);
+            Log.i("event created", "hurray");
+            startActivity(new Intent(EventCreator.this, EventList.class));
+        } catch (MeetlyServer.FailedPublicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkForConflict() {
 
         MeetlyServer server = AppState.getServer();
 
         try {
             for(MeetlyServer.MeetlyEvent e : server.fetchEventsAfter(1)) {
                 if(e.startTime.getTimeInMillis() - startTime.getTimeInMillis() > 0 && e.startTime.getTimeInMillis() - endTime.getTimeInMillis() < 0) {
-                    conflictName += e.title + ' ';
+                    conflictName += e.title + " ";
                     conflictFound = 1;
                 } else if(e.startTime.getTimeInMillis() - startTime.getTimeInMillis() < 0 && e.endTime.getTimeInMillis() - startTime.getTimeInMillis() > 0) {
-                    conflictName += e.title + ' ';
+                    conflictName += e.title + " ";
                     conflictFound = 1;
                 }
             }
-            if(conflictFound == 1) {
-                dialogBuilder = new AlertDialog.Builder(this);
-
-                dialogBuilder.setTitle("Conflicts FOUND!");
-                dialogBuilder.setMessage("Conflicting events: " + conflictName);
-                dialogBuilder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        saveFile = 1;
-                    }
-                });
-                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        saveFile = -1;
-                    }
-                });
-
-                AlertDialog dialogConflict = dialogBuilder.create();
-                dialogConflict.show();
-
-            }
-            if(saveFile == 1) {
-                try {
-                    server.publishEvent(userName, userToken, eventName, startTime, endTime, LATITUDE, LONGITUDE);
-                    Log.i("Event Created", "weeee");
-                    startActivity(new Intent(EventCreator.this, EventList.class));
-                }
-                catch (MeetlyServer.FailedPublicationException e) {
-                    e.printStackTrace();
-                }
-            }
-
         } catch (MeetlyServer.FailedFetchException e) {
             e.printStackTrace();
         }
@@ -241,6 +234,28 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
             }
         }, selectedYear, selectedMonth, selectedDay);
         dpd.show();
+    }
+
+    private void conflictNotice() {
+        dialogBuilder = new AlertDialog.Builder(this);
+
+        dialogBuilder.setTitle("Conflicts FOUND!");
+        dialogBuilder.setMessage("Conflicting events: " + conflictName);
+        dialogBuilder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                saveFile = 1;
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                saveFile = -1;
+            }
+        });
+
+        AlertDialog dialogConflict = dialogBuilder.create();
+        dialogConflict.show();
     }
 
     private void setEventName() {

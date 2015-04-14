@@ -35,7 +35,6 @@ public class EventList extends ActionBarActivity {
     final long hoursInMilli = minutesInMilli * 60;
     final long daysInMilli = hoursInMilli * 24;
 
-    public static List<MeetlyServer.MeetlyEvent> allEvents = new ArrayList<MeetlyServer.MeetlyEvent>();
     public static List<MeetlyServer.MeetlyEvent> myEvents = new ArrayList<MeetlyServer.MeetlyEvent>();
 
     @Override
@@ -47,7 +46,6 @@ public class EventList extends ActionBarActivity {
         createLoginButton();
         createRefreshButton();
         loadEvents();
-
 
         Log.i("App Loaded", "Proceed");
     }
@@ -64,8 +62,18 @@ public class EventList extends ActionBarActivity {
         Collections.sort(myEvents, new EventListComparator());
         populateListView();
         makeItemsClickable();
+        deleteDuplicates();
     }
 
+    private void deleteDuplicates() {
+        for (int i = 0; i < myEvents.size()-1; i++) {
+            for (int j = 1; j < myEvents.size(); j++) {
+                if (myEvents.get(i).equals(myEvents.get(j))) {
+                    myEvents.remove(j);
+                }
+            }
+        }
+    }
 
     private void loadMeetlyEvents() {
 
@@ -74,13 +82,9 @@ public class EventList extends ActionBarActivity {
         long nowTime = now.getTime();
 
         try {
-            //allEvents = server.fetchEventsAfter(1);
             for (MeetlyServer.MeetlyEvent e : server.fetchEventsAfter(1)) {
-                //Log.i("DBTester", "Event " + e.title);
                 if(e.startTime.getTimeInMillis() - nowTime > 0) {
                     myEvents.add(e);
-//                    Log.i("Event tite: ", e.title);
-//                    Log.i("Last update: ", String.valueOf(e.lastUpdate));
                 }
             }
 
@@ -101,15 +105,10 @@ public class EventList extends ActionBarActivity {
         refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreshPage();
+                loadEvents();
             }
 
         });
-    }
-
-
-    private void refreshPage() {
-        loadEvents();
     }
 
     private void createLoginButton() {
@@ -163,44 +162,57 @@ public class EventList extends ActionBarActivity {
                 MeetlyServer.MeetlyEvent eventClicked = myEvents.get(position);
 
                 String message = eventClicked.title;
-                //Toast.makeText(EventList.this, message, Toast.LENGTH_LONG).show();
-                Log.i("Event clicked", message);
+                int eventNumber = eventClicked.eventID;
 
-                String name = (eventClicked.title);
-
-                String start = (eventClicked.startTime.toString());
                 int year = eventClicked.startTime.get(Calendar.YEAR);
                 int month = eventClicked.startTime.get(Calendar.MONTH);
                 int day = eventClicked.startTime.get(Calendar.DAY_OF_MONTH);
+
                 int startHour = eventClicked.startTime.get(Calendar.HOUR_OF_DAY);
                 int startMin = eventClicked.startTime.get(Calendar.MINUTE);
                 int startSec = eventClicked.startTime.get(Calendar.SECOND);
 
-                String end = (eventClicked.endTime.toString());
                 int endHour = eventClicked.endTime.get(Calendar.HOUR_OF_DAY);
                 int endMin = eventClicked.endTime.get(Calendar.MINUTE);
                 int endSec = eventClicked.endTime.get(Calendar.SECOND);
 
-                Date now = new Date();
-
-                String difference = findTimeRemaining(eventClicked, now);
-
                 double lat = (eventClicked.latitude);
                 double lng = (eventClicked.longitude);
 
+                long difference = calculateDuration(eventClicked);
+
+                long hoursPassed = difference / hoursInMilli;
+                difference = difference % hoursInMilli;
+
+                long minutesPassed = difference / minutesInMilli;
+                difference = difference % minutesInMilli;
+
+                long secondsPassed = difference / secondsInMilli;
+
+                String time = ( "Event Duration: " + hoursPassed + " hours, " + minutesPassed + " minutes, " +
+                        secondsPassed + " seconds");
+
+                Log.i("Event clicked", message);
+                Log.i("Event ID: ", String.valueOf(eventNumber));
+
                 Bundle b = new Bundle();
-                b.putString("NAME", name);
-                b.putString("START" , start);
-                b.putString("END" , end);
-                b.putString("TIME", difference);
+
+                b.putString("TIME", time);
+
+                b.putString("NAME", message);
+                b.putInt("EVENTID", eventNumber);
+
                 b.putDouble("LAT", lat);
                 b.putDouble("LNG", lng);
+
                 b.putInt("DAY" , day);
                 b.putInt("MON" , month);
                 b.putInt("YEAR" , year);
+
                 b.putInt("SH" , startHour);
                 b.putInt("SM" , startMin);
                 b.putInt("SS" , startSec);
+
                 b.putInt("EH" , endHour);
                 b.putInt("EM" , endMin);
                 b.putInt("ES" , endSec);

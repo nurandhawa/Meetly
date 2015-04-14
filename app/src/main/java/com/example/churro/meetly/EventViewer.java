@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.nio.channels.Channel;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -43,17 +44,29 @@ public class EventViewer extends ActionBarActivity {
         textViewName = (TextView) findViewById(R.id.eventName);
         textViewName.setText(name);
 
-        String start = getIntent().getExtras().getString("START");
-        textViewStart = (TextView) findViewById(R.id.startTime);
-        textViewStart.setText(start);
+        int day = getIntent().getExtras().getInt("DAY");
+        int month = getIntent().getExtras().getInt("MON");
+        int year = getIntent().getExtras().getInt("YEAR");
 
-        String end = getIntent().getExtras().getString("END");
+        int startHour = getIntent().getExtras().getInt("SH");
+        int startMin = getIntent().getExtras().getInt("SM");
+
+        int endHour = getIntent().getExtras().getInt("EH");
+        int endMin = getIntent().getExtras().getInt("EM");
+
+        String date = Integer.toString(year) + "/" + Integer.toString(month) + "/" + Integer.toString(day);
+        String sTime = Integer.toString(startHour) + ":" + Integer.toString(startMin);
+        String eTime = Integer.toString(endHour) + ":" + Integer.toString(endMin);
+
+        textViewStart = (TextView) findViewById(R.id.startTime);
+        textViewStart.setText("Event Starts: " + date + " @" + sTime);
+
         textViewEnd = (TextView) findViewById(R.id.endTime);
-        textViewEnd.setText(end);
+        textViewEnd.setText("Event Ends: " + date + " @" + eTime);
 
         String duration = getIntent().getExtras().getString("TIME");
         textViewTime = (TextView) findViewById(R.id.timeLeft);
-        textViewTime.setText("Starts in: " + duration);
+        textViewTime.setText(duration);
 
         double lat = getIntent().getExtras().getDouble("LAT");
         double lng = getIntent().getExtras().getDouble("LNG");
@@ -65,17 +78,11 @@ public class EventViewer extends ActionBarActivity {
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(location, 12);
         mMap.animateCamera(update);
 
-
-        int position = getIntent().getExtras().getInt("POS");
-
-        startEditActivity(location , position);
+        startEditActivity();
     }
 
-    private void startEditActivity(LatLng location, int position) {
+    private void startEditActivity() {
         Button startEdit = (Button) findViewById(R.id.editButton);
-        final double lat = location.latitude;
-        final double lng = location.longitude;
-        final int pos = position;
         startEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
