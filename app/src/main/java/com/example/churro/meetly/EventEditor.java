@@ -58,14 +58,14 @@ public class EventEditor extends ActionBarActivity {
         setContentView(R.layout.activity_event_editor);
 
         //String name = getIntent().getExtras().getString("NAME");
-        String name = "EVENT_TITLE:" + getIntent().getExtras().getString("NAME");
-        String date = "EVENT_DATE:" + getIntent().getExtras().getInt("DAY") +
+        String name = "EVENT_TITLE: " + getIntent().getExtras().getString("NAME");
+        String date = "EVENT_DATE: " + getIntent().getExtras().getInt("DAY") +
                 getIntent().getExtras().getInt("MON") + getIntent().getExtras().getInt("YEAR");
-        String timeStart = "EVENT_START:" + getIntent().getExtras().getInt("SH") +
+        String timeStart = "EVENT_START: " + getIntent().getExtras().getInt("SH") +
                 getIntent().getExtras().getInt("SM") + getIntent().getExtras().getInt("SS");
-        String timeEnd = "EVENT_END:" + getIntent().getExtras().getInt("EH") +
+        String timeEnd = "EVENT_END: " + getIntent().getExtras().getInt("EH") +
                 getIntent().getExtras().getInt("EM") + getIntent().getExtras().getInt("ES");
-        String latlon = "EVENT_LOCATION:" + getIntent().getExtras().getDouble("LAT") +
+        String latlon = "EVENT_LOCATION: " + getIntent().getExtras().getDouble("LAT") + ' ' +
                 getIntent().getExtras().getDouble("LNG");
 
         String eventToDelete = name + date + timeStart + timeEnd + latlon;

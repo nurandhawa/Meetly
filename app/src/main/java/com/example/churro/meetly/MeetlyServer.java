@@ -104,4 +104,3 @@ public interface MeetlyServer {
         public double longitude;
     }
 }
-
