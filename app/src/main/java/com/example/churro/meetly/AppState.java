@@ -19,7 +19,7 @@ public class AppState {
 
     private MeetlyServer server;
     private int userToken = -1;
-    private String userName = "Not LoggedIN";
+    private String userName = "Not Logged In";
     private static List<MeetlyServer.MeetlyEvent> myEvents = new ArrayList<MeetlyServer.MeetlyEvent>();
 
     protected AppState() {

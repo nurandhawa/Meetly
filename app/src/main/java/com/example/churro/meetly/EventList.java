@@ -35,6 +35,7 @@ public class EventList extends ActionBarActivity {
     final long hoursInMilli = minutesInMilli * 60;
     final long daysInMilli = hoursInMilli * 24;
 
+    public static List<MeetlyServer.MeetlyEvent> allEvents = new ArrayList<MeetlyServer.MeetlyEvent>();
     public static List<MeetlyServer.MeetlyEvent> myEvents = new ArrayList<MeetlyServer.MeetlyEvent>();
 
     @Override
@@ -44,6 +45,14 @@ public class EventList extends ActionBarActivity {
         setInfo();
         createEventButton();
         createLoginButton();
+        createRefreshButton();
+        loadEvents();
+
+
+        Log.i("App Loaded", "Proceed");
+    }
+
+    private void loadEvents() {
         new Thread(new Runnable() {
 
             @Override
@@ -57,14 +66,22 @@ public class EventList extends ActionBarActivity {
         makeItemsClickable();
     }
 
+
     private void loadMeetlyEvents() {
 
         MeetlyServer server = AppState.getServer();
+        Date now = new Date();
+        long nowTime = now.getTime();
 
         try {
-            myEvents = server.fetchEventsAfter(1);
+            //allEvents = server.fetchEventsAfter(1);
             for (MeetlyServer.MeetlyEvent e : server.fetchEventsAfter(1)) {
-                Log.i("DBTester", "Event " + e.title);
+                //Log.i("DBTester", "Event " + e.title);
+                if(e.startTime.getTimeInMillis() - nowTime > 0) {
+                    myEvents.add(e);
+//                    Log.i("Event tite: ", e.title);
+//                    Log.i("Last update: ", String.valueOf(e.lastUpdate));
+                }
             }
 
         } catch (MeetlyServer.FailedFetchException e){
@@ -77,6 +94,22 @@ public class EventList extends ActionBarActivity {
         String curUser = AppState.getName();
         setName.setText(curUser);
 
+    }
+
+    private void createRefreshButton() {
+        Button refreshBtn = (Button) findViewById(R.id.btn_refresh);
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshPage();
+            }
+
+        });
+    }
+
+
+    private void refreshPage() {
+        loadEvents();
     }
 
     private void createLoginButton() {
@@ -104,7 +137,7 @@ public class EventList extends ActionBarActivity {
 
     public class EventListComparator implements Comparator<MeetlyServer.MeetlyEvent> {
         public int compare(MeetlyServer.MeetlyEvent event1 , MeetlyServer.MeetlyEvent event2) {
-            return event2.startTime.getTimeInMillis() - event2.startTime.getTimeInMillis();
+           return event1.startTime.compareTo(event2.startTime);
         }
     }
 
@@ -129,9 +162,12 @@ public class EventList extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 MeetlyServer.MeetlyEvent eventClicked = myEvents.get(position);
 
+                String message = eventClicked.title;
+                //Toast.makeText(EventList.this, message, Toast.LENGTH_LONG).show();
+                Log.i("Event clicked", message);
+
                 String name = (eventClicked.title);
 
-//                TextView start = (TextView) findViewById(R.id.startTime);
                 String start = (eventClicked.startTime.toString());
                 int year = eventClicked.startTime.get(Calendar.YEAR);
                 int month = eventClicked.startTime.get(Calendar.MONTH);
@@ -140,22 +176,19 @@ public class EventList extends ActionBarActivity {
                 int startMin = eventClicked.startTime.get(Calendar.MINUTE);
                 int startSec = eventClicked.startTime.get(Calendar.SECOND);
 
-//                TextView end = (TextView) findViewById(R.id.endTime);
                 String end = (eventClicked.endTime.toString());
                 int endHour = eventClicked.endTime.get(Calendar.HOUR_OF_DAY);
                 int endMin = eventClicked.endTime.get(Calendar.MINUTE);
                 int endSec = eventClicked.endTime.get(Calendar.SECOND);
-//                TextView timeRemaining = (TextView) findViewById(R.id.timeLeft);
+
                 Date now = new Date();
 
                 String difference = findTimeRemaining(eventClicked, now);
-                //EventViewer.textViewTime.setText(difference);
 
                 double lat = (eventClicked.latitude);
                 double lng = (eventClicked.longitude);
 
                 Bundle b = new Bundle();
-               // b.putInt("POS" , position);
                 b.putString("NAME", name);
                 b.putString("START" , start);
                 b.putString("END" , end);
@@ -177,8 +210,6 @@ public class EventList extends ActionBarActivity {
 
                 startActivity(intent);
 
-                String message = eventClicked.title;
-                Toast.makeText(EventList.this, message, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -235,10 +266,10 @@ public class EventList extends ActionBarActivity {
 
             // start:
             TextView startText = (TextView) itemView.findViewById(R.id.item_txtStart);
-            startText.setText("THE TEXT START: " + e.startTime);
+            startText.setText("Event Starts:  " + e.startTime.get(Calendar.YEAR) + "/" + e.startTime.get(Calendar.MONTH) +
+                    "/" + e.startTime.get(Calendar.DAY_OF_MONTH) + " at: " + e.startTime.get(Calendar.HOUR_OF_DAY) + ":" + e.startTime.get(Calendar.MINUTE));
 
             // end:
-            TextView duration = (TextView) itemView.findViewById(R.id.item_txtEnd);
 
             long difference = calculateDuration(e);
 
@@ -254,9 +285,8 @@ public class EventList extends ActionBarActivity {
 
             long secondsPassed = difference / secondsInMilli;
 
-            duration.setText( daysPassed + " days, " +
-                    hoursPassed + " hours, " +
-                    minutesPassed + " minutes, " +
+            TextView duration = (TextView) itemView.findViewById(R.id.item_txtEnd);
+            duration.setText( "Event Duration: " + hoursPassed + " hours, " + minutesPassed + " minutes, " +
                     secondsPassed + " seconds");
 
 

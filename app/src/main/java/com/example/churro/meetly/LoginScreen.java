@@ -54,6 +54,7 @@ public class LoginScreen extends ActionBarActivity {
             AppState.setToken(token);
             AppState.setName(username);
             Log.i("Logged in as: ", username);
+            Log.i("UserToken: ", String.valueOf(token));
         } catch (MeetlyServer.FailedLoginException e) {
             e.printStackTrace();
         }

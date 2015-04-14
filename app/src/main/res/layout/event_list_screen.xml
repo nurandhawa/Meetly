@@ -5,6 +5,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".ActivityListView">
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:id="@+id/btn_login"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        />
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:id="@+id/btn_refresh"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/btn_login"
+        android:layout_toStartOf="@+id/btn_login" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/userName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -12,22 +39,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_below="@+id/btn_login"
+
         android:id="@+id/linearLayout">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            android:id="@+id/btn_login"
-            android:layout_gravity="right" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/userName"
-            android:layout_gravity="left" />
 
         <TextView
             android:layout_width="wrap_content"

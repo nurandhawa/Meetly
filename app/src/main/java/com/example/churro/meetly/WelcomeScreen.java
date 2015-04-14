@@ -76,10 +76,7 @@ public class WelcomeScreen extends ActionBarActivity {
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
-
-                startActivity(new Intent(WelcomeScreen.this,
-                        EventList.class));
-                WelcomeScreen.this.finish();
+                startActivity(new Intent(WelcomeScreen.this, EventList.class));
             }
         });
 
@@ -88,10 +85,11 @@ public class WelcomeScreen extends ActionBarActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WelcomeScreen.this, EventList.class);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(0, 0);
+//                Intent intent = new Intent(WelcomeScreen.this, EventList.class);
+//                startActivity(intent);
+//                finish();
+//                overridePendingTransition(0, 0);
+                startActivity(new Intent(WelcomeScreen.this, EventList.class));
             }
         });
     }

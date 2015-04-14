@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
+import java.util.Date;
 
 public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapClickListener {
     private AlertDialog.Builder dialogBuilder;
@@ -41,17 +42,15 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
 
     //Temp strings for checking
     EditText textDate, textTimeStart, textTimeEnd;
-    private String eventName = "Current Event", eventDetail = "Fun stuff for everyone right?";
-    private int selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute;
+    private String eventName = "Current Event", userName;
+    private int userToken, selectedYear = -1, selectedMonth = -1, selectedDay = -1, startHour = -1, startMin = -1, endHour = -1, endMin = -1, selectedHour, selectedMinute;
     private final LatLng DEFAULT_LOCATION = new LatLng(49.187500,-122.849000);
     private double LATITUDE;
     private double LONGITUDE;
+    private Calendar startTime = Calendar.getInstance();
+    private Calendar endTime = Calendar.getInstance();
 
 
-    //Variable for saving file
-    String Message;
-    int data_block = 100;
-    String final_data="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +58,14 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         setContentView(R.layout.event_creator_screen);
         LATITUDE = 49.187500;
         LONGITUDE = -122.849000;
-        setButtons();
+        setUp();
         mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
         mMap.setOnMapClickListener(this);
         setDefaultMap();
         textDate = (EditText) findViewById(R.id.txtDate);
         textTimeStart = (EditText) findViewById(R.id.txtStart);
         textTimeEnd = (EditText) findViewById(R.id.txtEnd);
+
     }
 
     private void setDefaultMap() {
@@ -73,9 +73,11 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         mMap.animateCamera(update);
     }
 
-    private void setButtons() {
+    private void setUp() {
+
+        userName = AppState.getName();
+        userToken = AppState.getToken();
         Button name = (Button) findViewById(R.id.btnName);
-        // Button detail = (Button) findViewById(R.id.btnDetail);
         Button date = (Button) findViewById(R.id.btnDate);
         Button timeStart = (Button) findViewById(R.id.btnStart);
         Button timeEnd = (Button) findViewById(R.id.btnEnd);
@@ -87,13 +89,6 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
                 setEventName();
             }
         });
-
-//        detail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                setEventDetail();
-//            }
-//        });
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,44 +120,42 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
     }
 
     private void saveEvent() {
-        final_data = "";
-        try {
-            FileInputStream fis = openFileInput("event.txt");
+        Log.i("Save event", "started");
+        Date tempStartDate = new Date(selectedYear, selectedMonth, selectedDay, startHour, startMin);
+        Date tempEndDate = new Date(selectedYear, selectedMonth, selectedDay, endHour, endMin);
+        startTime.setTime(tempStartDate);
+        endTime.setTime(tempEndDate);
 
-            InputStreamReader isr = new InputStreamReader(fis);
-            char[] data = new char[data_block];
-            int size;
-            try {
-                while((size = isr.read(data))>0) {
-                    String read_data = String.copyValueOf(data, 0, size);
-                    final_data+= read_data;
-                    data = new char[data_block];
+        if(userToken == -1) {
+            Log.i("Not logged in", "LOG IN");
+            Toast.makeText(EventCreator.this, "You are not logged in", Toast.LENGTH_LONG).show();
+        } else if(userToken != -1 && selectedYear != -1 && selectedMonth != -1 && selectedDay != -1 && startHour != -1 && startMin != -1 && endHour != -1 && endMin != -1) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    publishEvent();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            }).start();
+        } else {
+            Log.i("Fill in the fields ", "asshole");
+            Toast.makeText(EventCreator.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
         }
 
-        Message = final_data + " " + eventName + " " + textDate.getText().toString() + " " + textTimeStart.getText().toString() + " " +
-                textTimeEnd.getText().toString() + " EVENT_LOCATION: " + Double.toString(LATITUDE) + " " + Double.toString(LONGITUDE);
+    }
+
+    private void publishEvent() {
+
+        MeetlyServer server = AppState.getServer();
+
         try {
-            FileOutputStream fou = openFileOutput("event.txt", MODE_WORLD_READABLE);
-            OutputStreamWriter osw = new OutputStreamWriter(fou);
-            try{
-                osw.write(Message);
-                osw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            server.publishEvent(userName, userToken, eventName, startTime, endTime, LATITUDE, LONGITUDE);
+            Log.i("Event Created", "weeee");
+            startActivity(new Intent(EventCreator.this, EventList.class));
 
-        } catch (FileNotFoundException e) {
+        } catch (MeetlyServer.FailedPublicationException e) {
             e.printStackTrace();
         }
-        Log.i("Current Events", Message);
-        startActivity(new Intent(EventCreator.this, EventList.class));
+
     }
 
     private void setEventStartTime() {
@@ -170,6 +163,10 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 textTimeStart.setText("EVENT_START: " + hourOfDay + " " + minute);
+                startHour = hourOfDay;
+                startMin = minute;
+                Log.i("StartTime: ", String.valueOf(startHour) + ":" + String.valueOf(startMin));
+
             }
         }, selectedHour, selectedMinute, true);
         tpd.show();
@@ -180,9 +177,13 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 textTimeEnd.setText("EVENT_END: " + hourOfDay + " " + minute);
+                endHour = hourOfDay;
+                endMin = minute;
+                Log.i("ENDTime: ", String.valueOf(endHour) + ":" + String.valueOf(endMin));
             }
         }, selectedHour, selectedMinute, true);
         tpd.show();
+
     }
 
 
@@ -195,7 +196,11 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                textDate.setText("EVENT_DATE: " + dayOfMonth + " " + (monthOfYear) + " " + year);
+                textDate.setText("EVENT_DATE: " + dayOfMonth + " " + monthOfYear + " " + year);
+                selectedYear = year;
+                selectedMonth = monthOfYear;
+                selectedDay = dayOfMonth;
+                Log.i("Date: ", String.valueOf(selectedYear) + "/" + String.valueOf(selectedMonth) + "/" + String.valueOf(selectedDay));
             }
         }, selectedYear, selectedMonth, selectedDay);
         dpd.show();
@@ -213,7 +218,7 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                eventName += textInput.getText().toString();
+                eventName = textInput.getText().toString();
                 updateDisplay(eventName, R.id.txtName);
             }
         });
@@ -227,35 +232,6 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         AlertDialog dialogEventName = dialogBuilder.create();
         dialogEventName.show();
     }
-
-//    private void setEventDetail() {
-//        dialogBuilder = new AlertDialog.Builder(this);
-//        final EditText textInput = new EditText(this);
-//
-//        eventDetail = "EVENT_DETAIL: ";
-//
-//        dialogBuilder.setTitle("Details");
-//        dialogBuilder.setMessage("Any additional information?");
-//        dialogBuilder.setView(textInput);
-//
-//        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                eventDetail += textInput.getText().toString();
-//                updateDisplay(eventDetail, R.id.txtDetail);
-//            }
-//        });
-//
-//        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//
-//            }
-//        });
-
-//        AlertDialog dialogEventName = dialogBuilder.create();
-//        dialogEventName.show();
-//    }
 
     private void updateDisplay(final String message, final int viewId) {
         TextView textView = (TextView) findViewById(viewId);
