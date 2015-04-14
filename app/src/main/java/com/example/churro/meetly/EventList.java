@@ -34,9 +34,6 @@ public class EventList extends ActionBarActivity {
     final long minutesInMilli = secondsInMilli * 60;
     final long hoursInMilli = minutesInMilli * 60;
     final long daysInMilli = hoursInMilli * 24;
-    //Variable for saving/loading event information
-    int data_block = 100;
-    String final_data="";
 
     public static List<MeetlyServer.MeetlyEvent> myEvents = new ArrayList<MeetlyServer.MeetlyEvent>();
 
@@ -44,12 +41,6 @@ public class EventList extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_screen);
-        //clearEvent();
-//        loadEvent();
-//        populateList();
-//        deleteDuplications();
-//        populateListView();
-//        makeItemsClickable();
         setInfo();
         createEventButton();
         createLoginButton();
@@ -101,49 +92,6 @@ public class EventList extends ActionBarActivity {
 
     }
 
-    private void clearEvent() {
-        if(myEvents.size() > 0) {
-            for(int i = 0; i < myEvents.size()-1; i++) {
-                myEvents.remove(i);
-            }
-        }
-    }
-
-    private void deleteDuplications() {
-        for (int i = 0; i < myEvents.size()-1; ++i) {
-           for (int j = 1; j < myEvents.size(); ++j) {
-               if (myEvents.get(i).equals(myEvents.get(j))) {
-                   myEvents.remove(j);
-               }
-           }
-        }
-    }
-
-    private void loadEvent() {
-        final_data = "";
-        try {
-            FileInputStream fis = openFileInput("event.txt");
-
-            InputStreamReader isr = new InputStreamReader(fis);
-            char[] data = new char[data_block];
-            int size;
-            try {
-                while((size = isr.read(data))>0) {
-                    String read_data = String.copyValueOf(data, 0, size);
-                    final_data+= read_data;
-                    data = new char[data_block];
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     private void createEventButton() {
         Button btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -153,88 +101,6 @@ public class EventList extends ActionBarActivity {
             }
         });
     }
-
-    //TODO:: get list from other activity
-//    private void populateList() {
-//
-//        int tempYear = -1;
-//        int tempMonth = -1;
-//        int tempDay = -1;
-//        int tempHourStart = -1;
-//        int tempHourEnd = -1;
-//        int tempMinStart = -1;
-//        int tempMinEnd = -1;
-//        double tempLat = -1;
-//        double tempLng = -1;
-//        int state = -1;
-//        String tempName = "";
-//
-//        String delims = "[ ]+";
-//        String[] tokens = final_data.split(delims);
-//
-//        for (int i = 0; i < tokens.length; i++) {
-//            if (tokens[i].equals("EVENT_TITLE:")) {
-//                if (tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
-//                        tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1 && tempLat != -1 && tempLng != -1) {
-//                    Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
-//                    Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
-//                    myEvents.add(new Event(tempName, startDate, endDate, tempLat, tempLng));
-//                    tempYear = -1;
-//                    tempMonth = -1;
-//                    tempDay = -1;
-//                    tempHourStart = -1;
-//                    tempHourEnd = -1;
-//                    tempMinStart = -1;
-//                    tempMinEnd = -1;
-//                    tempLat = -1;
-//                    tempLng = -1;
-//                    tempName = "";
-//                }
-//                state = 1;
-//            }
-//            if (tokens[i].equals("EVENT_DATE:")) {
-//                state = 0;
-//            }
-//
-//            if (!tokens[i].equals("EVENT_TITLE:") && state == 1) {
-//                tempName += " " + tokens[i];
-//            }
-//            if (tokens[i].equals("EVENT_DATE:")) {
-//                tempDay = Integer.parseInt(tokens[i+1]);
-//                tempMonth = Integer.parseInt(tokens[i+2]);
-//                tempYear = Integer.parseInt(tokens[i+3]) - 1900;
-//            }
-//            if (tokens[i].equals("EVENT_START:")) {
-//                tempHourStart = Integer.parseInt(tokens[i+1]);
-//                tempMinStart = Integer.parseInt(tokens[i+2]);
-//            }
-//            if (tokens[i].equals("EVENT_END:")) {
-//                tempHourEnd = Integer.parseInt(tokens[i+1]);
-//                tempMinEnd = Integer.parseInt(tokens[i+2]);
-//            }
-//            if (tokens[i].equals("EVENT_LOCATION:")) {
-//                tempLat = Double.parseDouble(tokens[i+1]);
-//                tempLng = Double.parseDouble(tokens[i+2]);
-//            }
-//            //Catch last event
-//            if (i+1 == tokens.length && tempYear != -1 && tempMonth != -1 && tempDay != -1 && tempHourStart != -1 &&
-//                    tempHourEnd != -1 && tempMinStart != -1 && tempMinEnd != -1) {
-//                //Create event, reset all temps back to -1;
-//                Date startDate = new Date(tempYear, tempMonth, tempDay, tempHourStart, tempMinStart);
-//                Date endDate = new Date(tempYear, tempMonth, tempDay, tempHourEnd, tempMinEnd);
-//                myEvents.add(new Event(tempName, startDate, endDate, tempLat, tempLng));
-//                tempYear = -1;
-//                tempMonth = -1;
-//                tempDay = -1;
-//                tempHourStart = -1;
-//                tempHourEnd = -1;
-//                tempMinStart = -1;
-//                tempMinEnd = -1;
-//                state = -1;
-//                tempName = "";
-//            }
-//        }
-//    }
 
     public class EventListComparator implements Comparator<MeetlyServer.MeetlyEvent> {
         public int compare(MeetlyServer.MeetlyEvent event1 , MeetlyServer.MeetlyEvent event2) {
@@ -260,8 +126,6 @@ public class EventList extends ActionBarActivity {
         }
     }
 
-
-
     private long calculateDuration(MeetlyServer.MeetlyEvent e) {
         long difference = 0;
         difference = e.endTime.getTimeInMillis() - e.startTime.getTimeInMillis();
@@ -283,8 +147,6 @@ public class EventList extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
                 MeetlyServer.MeetlyEvent eventClicked = myEvents.get(position);
 
-                //TextView name = (TextView) findViewById(R.id.eventName);
-                //name.setText(eventClicked.getTitle());
                 String name = (eventClicked.title);
 
 //                TextView start = (TextView) findViewById(R.id.startTime);
@@ -387,15 +249,14 @@ public class EventList extends ActionBarActivity {
 
             // name:
             TextView titleText = (TextView) itemView.findViewById(R.id.item_txtName);
-            titleText.setText(e.title);
+            titleText.setText("Event Title: " + e.title);
 
             // start:
             TextView startText = (TextView) itemView.findViewById(R.id.item_txtStart);
-            startText.setText("" + e.startTime);
+            startText.setText("THE TEXT START: " + e.startTime);
 
             // end:
             TextView duration = (TextView) itemView.findViewById(R.id.item_txtEnd);
-//            endText.setText("" + e.getEnd());
 
             long difference = calculateDuration(e);
 
@@ -425,7 +286,5 @@ public class EventList extends ActionBarActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-
-
 
 }
