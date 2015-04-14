@@ -42,8 +42,8 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
 
     //Temp strings for checking
     EditText textDate, textTimeStart, textTimeEnd;
-    private String eventName = "Current Event", userName;
-    private int userToken, selectedYear = -1, selectedMonth = -1, selectedDay = -1, startHour = -1, startMin = -1, endHour = -1, endMin = -1, selectedHour, selectedMinute;
+    private String eventName = "Current Event", userName, conflictName;
+    private int saveFile, conflictFound, userToken, selectedYear = -1, selectedMonth = -1, selectedDay = -1, startHour = -1, startMin = -1, endHour = -1, endMin = -1, selectedHour, selectedMinute;
     private final LatLng DEFAULT_LOCATION = new LatLng(49.187500,-122.849000);
     private double LATITUDE;
     private double LONGITUDE;
@@ -74,7 +74,8 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
     }
 
     private void setUp() {
-
+        conflictFound = -1;
+        saveFile = 1;
         userName = AppState.getName();
         userToken = AppState.getToken();
         Button name = (Button) findViewById(R.id.btnName);
@@ -127,7 +128,6 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         endTime.setTime(tempEndDate);
 
         if(userToken == -1) {
-            Log.i("Not logged in", "LOG IN");
             Toast.makeText(EventCreator.this, "You are not logged in", Toast.LENGTH_LONG).show();
         } else if(userToken != -1 && selectedYear != -1 && selectedMonth != -1 && selectedDay != -1 && startHour != -1 && startMin != -1 && endHour != -1 && endMin != -1) {
             new Thread(new Runnable() {
@@ -137,7 +137,6 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
                 }
             }).start();
         } else {
-            Log.i("Fill in the fields ", "asshole");
             Toast.makeText(EventCreator.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
         }
 
@@ -148,11 +147,49 @@ public class EventCreator extends ActionBarActivity implements GoogleMap.OnMapCl
         MeetlyServer server = AppState.getServer();
 
         try {
-            server.publishEvent(userName, userToken, eventName, startTime, endTime, LATITUDE, LONGITUDE);
-            Log.i("Event Created", "weeee");
-            startActivity(new Intent(EventCreator.this, EventList.class));
+            for(MeetlyServer.MeetlyEvent e : server.fetchEventsAfter(1)) {
+                if(e.startTime.getTimeInMillis() - startTime.getTimeInMillis() > 0 && e.startTime.getTimeInMillis() - endTime.getTimeInMillis() < 0) {
+                    conflictName += e.title + ' ';
+                    conflictFound = 1;
+                } else if(e.startTime.getTimeInMillis() - startTime.getTimeInMillis() < 0 && e.endTime.getTimeInMillis() - startTime.getTimeInMillis() > 0) {
+                    conflictName += e.title + ' ';
+                    conflictFound = 1;
+                }
+            }
+            if(conflictFound == 1) {
+                dialogBuilder = new AlertDialog.Builder(this);
 
-        } catch (MeetlyServer.FailedPublicationException e) {
+                dialogBuilder.setTitle("Conflicts FOUND!");
+                dialogBuilder.setMessage("Conflicting events: " + conflictName);
+                dialogBuilder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveFile = 1;
+                    }
+                });
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveFile = -1;
+                    }
+                });
+
+                AlertDialog dialogConflict = dialogBuilder.create();
+                dialogConflict.show();
+
+            }
+            if(saveFile == 1) {
+                try {
+                    server.publishEvent(userName, userToken, eventName, startTime, endTime, LATITUDE, LONGITUDE);
+                    Log.i("Event Created", "weeee");
+                    startActivity(new Intent(EventCreator.this, EventList.class));
+                }
+                catch (MeetlyServer.FailedPublicationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (MeetlyServer.FailedFetchException e) {
             e.printStackTrace();
         }
 
